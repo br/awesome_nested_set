@@ -79,7 +79,7 @@ module CollectiveIdea #:nodoc:
           end
 
           def nested_set_scope(options = {})
-            options = {:order => quoted_order_column_full_name}.merge(options)
+            options = {:order => 'lft'}.merge(options)
 
             where(options[:conditions]).order(options.delete(:order))
           end
@@ -171,9 +171,7 @@ module CollectiveIdea #:nodoc:
         end
 
         def right_most_node
-          @right_most_node ||= self.class.base_class.unscoped.nested_set_scope(
-            :order => "#{quoted_right_column_full_name} desc"
-          ).first
+          @right_most_node ||= self.class.base_class.unscoped.order(rgt: :desc).first
         end
 
         def right_most_bound
@@ -223,6 +221,7 @@ module CollectiveIdea #:nodoc:
 
         def set_default_left_and_right
           # adds the new node to the right of all existing nodes
+
           self[left_column_name] = right_most_bound + 1
           self[right_column_name] = right_most_bound + 2
         end
