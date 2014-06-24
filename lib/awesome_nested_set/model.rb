@@ -158,7 +158,7 @@ module CollectiveIdea #:nodoc:
 
         def without_self(scope)
           return scope if new_record?
-          scope.where(["#{self.class.quoted_table_name}.#{self.class.quoted_primary_column_name} != ?", self.primary_id])
+          scope.where(["#{self.class.primary_column_name} != ?", self.primary_id])
         end
 
         def store_new_parent
